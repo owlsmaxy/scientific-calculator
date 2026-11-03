@@ -86,7 +86,12 @@ h2 { margin: 0; font-size: 20px; letter-spacing: -.6px; }
 .memory-indicator.active { color: var(--green); }
 .memory-indicator.active span { background: var(--green); box-shadow: 0 0 9px rgba(112, 215, 177, .5); }
 
-.keypad { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; }
+.scientific-keys { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; margin-bottom: 10px; }
+.keypad { display: grid; grid-template-columns: minmax(0, 3fr) minmax(82px, 1fr); gap: 9px; }
+.number-pad { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.function-pad { display: grid; grid-template-rows: auto 1fr auto; gap: 8px; }
+.utility-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+.operator-column { display: grid; grid-template-rows: repeat(4, minmax(0, 1fr)); gap: 8px; }
 .key { position: relative; display: flex; min-height: 47px; align-items: center; justify-content: center; gap: 2px; border: 1px solid transparent; border-radius: 11px; cursor: pointer; user-select: none; transition: transform .12s, background .18s, border-color .18s, filter .18s; }
 .key:hover { filter: brightness(1.13); transform: translateY(-1px); }
 .key:active { transform: translateY(1px) scale(.98); }
@@ -100,7 +105,7 @@ h2 { margin: 0; font-size: 20px; letter-spacing: -.6px; }
 .operator-key:hover { background: rgba(156, 140, 255, .23); }
 .utility-key { border-color: rgba(255, 130, 144, .17); background: rgba(255, 130, 144, .08); color: #ff9ca7; font-weight: 700; }
 .utility-key:hover { background: rgba(255, 130, 144, .16); }
-.equals-key { border-color: transparent; background: var(--accent-strong); color: #fff; font-size: 22px; font-weight: 700; box-shadow: 0 5px 16px rgba(140, 121, 250, .24); }
+.equals-key { min-height: 58px; border-color: transparent; background: var(--accent-strong); color: #fff; font-size: 22px; font-weight: 700; box-shadow: 0 5px 16px rgba(140, 121, 250, .24); }
 .equals-key:hover { background: #a090ff; }
 .keyboard-hint { margin: 16px 0 0; color: var(--subtle); font-size: 10px; text-align: center; }
 kbd { padding: 2px 5px; border: 1px solid var(--line); border-radius: 4px; color: var(--muted); font: 9px "DM Mono", monospace; }
@@ -166,8 +171,13 @@ body.custom-theme { background: var(--page); }
   .calculator-heading { gap: 8px; }
   h1 { font-size: 17px; }
   .display { min-height: 135px; margin-top: 18px; padding: 14px; }
-  .keypad { gap: 6px; }
+  .scientific-keys { gap: 6px; }
+  .keypad { grid-template-columns: minmax(0, 3fr) minmax(76px, 1fr); gap: 6px; }
+  .number-pad, .operator-column { gap: 6px; }
+  .function-pad { gap: 6px; }
+  .utility-row { gap: 4px; }
   .key { min-height: 43px; border-radius: 9px; }
+  .equals-key { min-height: 52px; }
   .function-key { font-size: 10px; }
   .number-key { font-size: 14px; }
   .keyboard-hint { font-size: 9px; }

@@ -72,7 +72,7 @@
             <button class="memory-indicator" id="memory-indicator" type="button" aria-label="Memory is empty" title="Memory status"><span></span> MEM</button>
           </div>
 
-          <div class="keypad" aria-label="Calculator keys">
+          <div class="scientific-keys" aria-label="Scientific functions">
             <button class="key function-key" data-insert="sin(" type="button">sin</button>
             <button class="key function-key" data-insert="cos(" type="button">cos</button>
             <button class="key function-key" data-insert="tan(" type="button">tan</button>
@@ -98,29 +98,38 @@
             <button class="key function-key" data-insert="pi" type="button">π</button>
             <button class="key function-key" data-insert="e" type="button">e</button>
             <button class="key function-key" data-insert="Ans" type="button">Ans</button>
-            <button class="key utility-key" data-action="delete" type="button" aria-label="Delete last character" title="Delete">⌫</button>
-            <button class="key utility-key" data-action="clear" type="button">AC</button>
-
-            <button class="key number-key" data-insert="7" type="button">7</button>
-            <button class="key number-key" data-insert="8" type="button">8</button>
-            <button class="key number-key" data-insert="9" type="button">9</button>
-            <button class="key operator-key" data-insert="/" type="button">÷</button>
-            <button class="key operator-key" data-insert="*" type="button">×</button>
-            <button class="key operator-key" data-insert="-" type="button">−</button>
-
-            <button class="key number-key" data-insert="4" type="button">4</button>
-            <button class="key number-key" data-insert="5" type="button">5</button>
-            <button class="key number-key" data-insert="6" type="button">6</button>
-            <button class="key operator-key" data-insert="+" type="button">+</button>
-            <button class="key number-key" data-insert="1" type="button">1</button>
-            <button class="key number-key" data-insert="2" type="button">2</button>
-
-            <button class="key number-key" data-insert="3" type="button">3</button>
-            <button class="key number-key" data-insert="0" type="button">0</button>
-            <button class="key number-key" data-insert="." type="button">.</button>
             <button class="key operator-key" data-insert="E" type="button" title="Scientific notation exponent">EXP</button>
-            <button class="key number-key" data-insert="00" type="button">00</button>
-            <button class="key equals-key" data-action="equals" type="button" aria-label="Calculate">=</button>
+          </div>
+
+          <div class="keypad" aria-label="Calculator keys">
+            <div class="number-pad" aria-label="Number keys">
+              <button class="key number-key" data-insert="7" type="button">7</button>
+              <button class="key number-key" data-insert="8" type="button">8</button>
+              <button class="key number-key" data-insert="9" type="button">9</button>
+              <button class="key number-key" data-insert="4" type="button">4</button>
+              <button class="key number-key" data-insert="5" type="button">5</button>
+              <button class="key number-key" data-insert="6" type="button">6</button>
+              <button class="key number-key" data-insert="1" type="button">1</button>
+              <button class="key number-key" data-insert="2" type="button">2</button>
+              <button class="key number-key" data-insert="3" type="button">3</button>
+              <button class="key number-key" data-insert="0" type="button">0</button>
+              <button class="key number-key" data-insert="." type="button">.</button>
+              <button class="key number-key" data-insert="00" type="button">00</button>
+            </div>
+
+            <div class="function-pad" aria-label="Calculator functions">
+              <div class="utility-row">
+                <button class="key utility-key" data-action="clear" type="button" aria-label="Clear">C</button>
+                <button class="key utility-key" data-action="delete" type="button" aria-label="Delete last character" title="Delete">⌫</button>
+              </div>
+              <div class="operator-column" aria-label="Operators">
+                <button class="key operator-key" data-insert="/" type="button" aria-label="Divide">÷</button>
+                <button class="key operator-key" data-insert="*" type="button" aria-label="Multiply">×</button>
+                <button class="key operator-key" data-insert="-" type="button" aria-label="Subtract">−</button>
+                <button class="key operator-key" data-insert="+" type="button" aria-label="Add">+</button>
+              </div>
+              <button class="key equals-key" data-action="equals" type="button" aria-label="Calculate">=</button>
+            </div>
           </div>
           <p class="keyboard-hint">Tip: use your keyboard <kbd>Enter</kbd> to calculate <span>·</span> <kbd>Esc</kbd> to clear</p>
         </section>
