@@ -10,22 +10,48 @@
   const memoryIndicator = document.getElementById("memory-indicator");
   const appearanceToggle = document.getElementById("appearance-toggle");
   const appearancePanel = document.getElementById("appearance-panel");
-  const customColors = document.getElementById("custom-colors");
-  const accentColor = document.getElementById("accent-color");
-  const backgroundColor = document.getElementById("background-color");
+  const appearancePreview = document.getElementById("appearance-preview");
+  const colorInputs = Array.from(document.querySelectorAll("[data-color-setting]"));
+  const resetAppearanceButton = document.getElementById("reset-appearance");
+  const applyAppearanceButton = document.getElementById("apply-appearance");
   const toast = document.getElementById("toast");
-  const appearanceProperties = [
-    "--page", "--card", "--card-raised", "--display", "--line", "--text",
-    "--muted", "--subtle", "--accent", "--accent-strong", "--accent-soft",
-    "--green", "--danger", "--shadow", "--function-key", "--number-key",
-    "--key-hover"
-  ];
+  const shiftToggle = document.getElementById("shift-toggle");
+  const appearanceProperties = {
+    body: "--calculator-body",
+    button: "--button-bg",
+    buttonText: "--button-text",
+    display: "--display-bg",
+    displayText: "--display-text",
+    operator: "--operator",
+    accent: "--accent"
+  };
+  const THEME_PRESETS = {
+    midnight: { body: "#111018", button: "#1b1924", buttonText: "#c5adfa", display: "#10162b", displayText: "#f0edff", operator: "#6442a9", accent: "#a98bfa" },
+    ocean: { body: "#0d1822", button: "#142632", buttonText: "#88d8ff", display: "#081c2e", displayText: "#d9f4ff", operator: "#14628d", accent: "#42b8ee" },
+    emerald: { body: "#101b17", button: "#172820", buttonText: "#8ce4bd", display: "#091e18", displayText: "#e1fff1", operator: "#17684a", accent: "#45d6a0" },
+    crimson: { body: "#201116", button: "#301920", buttonText: "#ffadb8", display: "#251019", displayText: "#ffe8ec", operator: "#8d2940", accent: "#f06478" },
+    silver: { body: "#24272d", button: "#30343c", buttonText: "#d7dce5", display: "#171b25", displayText: "#f3f5fb", operator: "#616b7b", accent: "#c1cad8" },
+    black: { body: "#050506", button: "#101012", buttonText: "#ded8f2", display: "#050910", displayText: "#f4f1ff", operator: "#34205d", accent: "#a98bfa" }
+  };
+  const THEME_NAMES = {
+    midnight: "Midnight Purple",
+    ocean: "Ocean Blue",
+    emerald: "Emerald Green",
+    crimson: "Crimson Red",
+    silver: "Silver and Black",
+    black: "Pure Black",
+    custom: "Custom Theme"
+  };
+  const DEFAULT_APPEARANCE = { theme: "midnight", colors: { ...THEME_PRESETS.midnight } };
   let answer = 0;
   let memory = null;
   let angleMode = "DEG";
   let justEvaluated = false;
+  let shiftActive = false;
   let toastTimer;
-  let appearance = { mode: "dark", accent: "#9c8cff", background: "#10131b", customized: false };
+  let appearance = { theme: DEFAULT_APPEARANCE.theme, colors: { ...DEFAULT_APPEARANCE.colors } };
+  let draftAppearance = { theme: appearance.theme, colors: { ...appearance.colors } };
+  let appearanceDirty = false;
 
   function format(value) {
     if (Object.is(value, -0)) return "0";
@@ -49,21 +75,36 @@
       justEvaluated = true;
       return true;
     } catch (error) {
-      resultOutput.textContent = error.message;
+      resultOutput.textContent = errorMessage(error);
       resultOutput.classList.add("error");
       return false;
     }
+  }
+
+  function errorMessage(error) {
+    return /divide by zero/i.test(error.message) ? "Math ERROR" : error.message;
+  }
+
+  function hasDecimalAtCaret(value, position) {
+    const numberPattern = /(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d*)?/g;
+    let match;
+    while ((match = numberPattern.exec(value))) {
+      const end = match.index + match[0].length;
+      if (match[0].includes(".") && match.index <= position && position <= end) return true;
+    }
+    return false;
   }
 
   function insert(value) {
     const isContinuation = /^[+\-*/^!%)]/.test(value);
     let start = expressionInput.selectionStart;
     let end = expressionInput.selectionEnd;
-    if (justEvaluated && !isContinuation && value !== "." && value !== "E") {
+    if (justEvaluated && !isContinuation && value !== "E") {
       expressionInput.value = "";
       start = 0;
       end = 0;
     }
+    if (value === "." && hasDecimalAtCaret(expressionInput.value.slice(0, start) + expressionInput.value.slice(end), start)) return;
     justEvaluated = false;
     expressionInput.setRangeText(value, start, end, "end");
     updatePreview();
@@ -81,7 +122,7 @@
       resultOutput.textContent = format(value);
       resultOutput.classList.remove("error");
     } catch (error) {
-      resultOutput.textContent = error.message;
+      resultOutput.textContent = errorMessage(error);
       resultOutput.classList.add("error");
     }
   }
@@ -92,6 +133,28 @@
     justEvaluated = false;
     updatePreview();
     expressionInput.focus();
+  }
+
+  function applyToCurrentExpression(suffix, prefix) {
+    const source = expressionInput.value.trim() || String(answer);
+    expressionInput.value = prefix + source + suffix;
+    justEvaluated = false;
+    updatePreview();
+    expressionInput.focus();
+    expressionInput.setSelectionRange(expressionInput.value.length, expressionInput.value.length);
+  }
+
+  function insertFunction(name) {
+    if (expressionInput.value.trim()) applyToCurrentExpression(")", name + "(");
+    else insert(name + "(");
+  }
+
+  function updateShiftState() {
+    shiftToggle.setAttribute("aria-pressed", String(shiftActive));
+    document.querySelector(".calculator-card").classList.toggle("shift-active", shiftActive);
+    document.querySelectorAll(".key-secondary[data-default]").forEach(label => {
+      label.textContent = shiftActive && label.dataset.shift ? label.dataset.shift : label.dataset.default;
+    });
   }
 
   function renderHistory() {
@@ -133,13 +196,41 @@
     toastTimer = window.setTimeout(() => toast.classList.remove("visible"), 1800);
   }
 
-  document.querySelectorAll("[data-insert]").forEach(button => {
-    button.addEventListener("click", () => insert(button.dataset.insert));
+  shiftToggle.addEventListener("click", () => {
+    shiftActive = !shiftActive;
+    updateShiftState();
+  });
+
+  document.querySelectorAll(".key[data-insert]").forEach(button => {
+    button.addEventListener("click", () => {
+      const value = shiftActive && button.dataset.shiftInsert
+        ? button.dataset.shiftInsert
+        : button.dataset.insert;
+      if (shiftActive && button.dataset.shiftInsert) {
+        shiftActive = false;
+        updateShiftState();
+      }
+      const functionMatch = /^(sin|cos|tan|asin|acos|atan|log|ln|sqrt|cbrt|10\^|e\^)\($/.exec(value);
+      if (functionMatch) insertFunction(functionMatch[1]);
+      else insert(value);
+    });
   });
 
   document.querySelectorAll("[data-action]").forEach(button => {
     button.addEventListener("click", () => {
-      const action = button.dataset.action;
+      if (shiftActive && button.dataset.shiftInsert) {
+        shiftActive = false;
+        updateShiftState();
+        insert(button.dataset.shiftInsert);
+        return;
+      }
+      const action = shiftActive && button.dataset.shiftAction
+        ? button.dataset.shiftAction
+        : button.dataset.action;
+      if (shiftActive && button.dataset.shiftAction) {
+        shiftActive = false;
+        updateShiftState();
+      }
       if (action === "equals") evaluate();
       else if (action === "clear") clear();
       else if (action === "delete") {
@@ -150,6 +241,15 @@
         justEvaluated = false;
         updatePreview();
         expressionInput.focus();
+      } else if (action === "square") {
+        applyToCurrentExpression(")^2", "(");
+      } else if (action === "cube") {
+        applyToCurrentExpression(")^3", "(");
+      } else if (action === "reciprocal") {
+        applyToCurrentExpression(")", "1/(");
+      } else if (action === "negate") {
+        if (expressionInput.value.trim()) applyToCurrentExpression(")", "-(");
+        else insert("-");
       } else if (action === "memory-clear") {
         memory = null;
         updateMemoryIndicator();
@@ -164,7 +264,7 @@
           updateMemoryIndicator();
           showToast("Value saved to memory");
         } catch (error) {
-          resultOutput.textContent = error.message;
+          resultOutput.textContent = errorMessage(error);
           resultOutput.classList.add("error");
           showToast(error.message);
         }
@@ -177,13 +277,6 @@
     memoryIndicator.setAttribute("aria-label", memory === null ? "Memory is empty" : "Memory contains " + format(memory));
   }
 
-  memoryIndicator.addEventListener("click", () => {
-    if (memory !== null) {
-      insert(format(memory));
-      showToast("Memory recalled");
-    } else showToast("Memory is empty");
-  });
-
   angleToggle.addEventListener("click", () => {
     angleMode = angleMode === "DEG" ? "RAD" : "DEG";
     angleToggle.innerHTML = angleMode + ' <span aria-hidden="true">⌄</span>';
@@ -192,115 +285,102 @@
     updatePreview();
   });
 
-  function hexToRgb(hex) {
-    const match = /^#([0-9a-f]{6})$/i.exec(hex);
-    if (!match) throw new Error("Invalid appearance color");
-    const value = match[1];
-    return [parseInt(value.slice(0, 2), 16), parseInt(value.slice(2, 4), 16), parseInt(value.slice(4, 6), 16)];
+  function isHexColor(value) {
+    return typeof value === "string" && /^#[0-9a-f]{6}$/i.test(value);
   }
 
-  function mixColors(first, second, amount) {
-    const a = hexToRgb(first);
-    const b = hexToRgb(second);
-    return "#" + a.map((channel, index) => Math.round(channel * (1 - amount) + b[index] * amount).toString(16).padStart(2, "0")).join("");
+  function copyAppearance(source) {
+    return { theme: source.theme, colors: { ...source.colors } };
   }
 
-  function luminance(hex) {
-    return hexToRgb(hex).map(channel => {
-      const value = channel / 255;
-      return value <= 0.04045 ? value / 12.92 : Math.pow((value + 0.055) / 1.055, 2.4);
-    }).reduce((sum, channel, index) => sum + channel * [0.2126, 0.7152, 0.0722][index], 0);
+  function blendColors(first, second, amount) {
+    const channel = (hex, offset) => parseInt(hex.slice(offset, offset + 2), 16);
+    return "#" + [1, 3, 5].map(offset =>
+      Math.round(channel(first, offset) * (1 - amount) + channel(second, offset) * amount)
+        .toString(16).padStart(2, "0")
+    ).join("");
   }
 
-  function applyAppearance() {
-    const isCustom = appearance.mode === "custom";
-    const isLight = appearance.mode === "light";
-    document.body.classList.toggle("light-theme", isLight);
-    document.body.classList.toggle("custom-theme", isCustom);
-    customColors.hidden = !isCustom;
-    document.querySelectorAll("[data-theme-mode]").forEach(button => {
-      button.setAttribute("aria-pressed", String(button.dataset.themeMode === appearance.mode));
+  function applyAppearancePreview() {
+    const rootStyle = document.documentElement.style;
+    Object.entries(appearanceProperties).forEach(([key, property]) => {
+      rootStyle.setProperty(property, draftAppearance.colors[key]);
     });
-
-    appearanceProperties.forEach(property => document.body.style.removeProperty(property));
-    if (isCustom) {
-      const background = appearance.background;
-      const light = luminance(background) > 0.45;
-      const foreground = light ? "#202638" : "#f2f4fa";
-      const opposite = light ? "#000000" : "#ffffff";
-      document.body.style.colorScheme = light ? "light" : "dark";
-      document.body.style.setProperty("--page", background);
-      const card = mixColors(background, opposite, light ? 0.035 : 0.075);
-      document.body.style.setProperty("--card", card);
-      document.body.style.setProperty("--card-raised", mixColors(background, opposite, light ? 0.065 : 0.12));
-      document.body.style.setProperty("--display", mixColors(background, opposite, light ? 0.018 : 0.045));
-      document.body.style.setProperty("--line", mixColors(background, foreground, 0.17));
-      document.body.style.setProperty("--text", foreground);
-      document.body.style.setProperty("--muted", mixColors(foreground, background, 0.43));
-      document.body.style.setProperty("--subtle", mixColors(foreground, background, 0.64));
-      document.body.style.setProperty("--accent", appearance.accent);
-      document.body.style.setProperty("--accent-strong", appearance.accent);
-      document.body.style.setProperty("--accent-soft", "rgba(" + hexToRgb(appearance.accent).join(", ") + ", .14)");
-      document.body.style.setProperty("--green", light ? "#16815f" : "#70d7b1");
-      document.body.style.setProperty("--danger", light ? "#c53e55" : "#ff8290");
-      document.body.style.setProperty("--shadow", light ? "0 22px 60px rgba(42, 48, 76, .12)" : "0 28px 80px rgba(0, 0, 0, .28)");
-      document.body.style.setProperty("--function-key", mixColors(card, foreground, light ? 0.04 : 0.09));
-      document.body.style.setProperty("--number-key", mixColors(card, foreground, light ? 0.08 : 0.13));
-      document.body.style.setProperty("--key-hover", mixColors(card, foreground, light ? 0.14 : 0.21));
-    } else {
-      document.body.style.removeProperty("color-scheme");
-    }
+    rootStyle.setProperty("--secondary", blendColors(draftAppearance.colors.accent, draftAppearance.colors.buttonText, .4));
+    document.querySelectorAll("[data-preset]").forEach(button => {
+      button.setAttribute("aria-pressed", String(button.dataset.preset === draftAppearance.theme));
+    });
+    colorInputs.forEach(input => {
+      input.value = draftAppearance.colors[input.dataset.colorSetting];
+    });
+    appearancePreview.textContent = appearanceDirty
+      ? "Live preview — Apply to save, or close to discard"
+      : "Previewing " + THEME_NAMES[draftAppearance.theme];
   }
 
   function saveAppearance() {
     try {
       localStorage.setItem("calculus-appearance", JSON.stringify(appearance));
+      return true;
     } catch (error) {
       console.warn("Could not save appearance preference:", error);
+      showToast("Could not save appearance settings");
+      return false;
     }
+  }
+
+  function resetAppearanceDraft() {
+    draftAppearance = copyAppearance(appearance);
+    appearanceDirty = false;
+    applyAppearancePreview();
   }
 
   appearanceToggle.addEventListener("click", () => {
     const opening = appearancePanel.hidden;
+    if (opening) resetAppearanceDraft();
     appearancePanel.hidden = !opening;
     appearanceToggle.setAttribute("aria-expanded", String(opening));
   });
 
-  document.querySelectorAll("[data-theme-mode]").forEach(button => {
+  document.querySelectorAll("[data-preset]").forEach(button => {
     button.addEventListener("click", () => {
-      if (button.dataset.themeMode === "custom" && !appearance.customized) {
-        if (appearance.mode === "light") {
-          appearance.accent = "#735ee8";
-          appearance.background = "#f1f3f9";
-        } else {
-          appearance.accent = "#9c8cff";
-          appearance.background = "#10131b";
-        }
-        accentColor.value = appearance.accent;
-        backgroundColor.value = appearance.background;
-        appearance.customized = true;
-      }
-      appearance.mode = button.dataset.themeMode;
-      applyAppearance();
-      saveAppearance();
+      const preset = button.dataset.preset;
+      if (preset !== "custom") draftAppearance.colors = { ...THEME_PRESETS[preset] };
+      draftAppearance.theme = preset;
+      appearanceDirty = true;
+      applyAppearancePreview();
     });
   });
 
-  function updateCustomColor(input, property) {
-    appearance[property] = input.value;
-    appearance.customized = true;
-    if (appearance.mode !== "custom") {
-      appearance.mode = "custom";
-    }
-    applyAppearance();
-    saveAppearance();
-  }
+  colorInputs.forEach(input => {
+    input.addEventListener("input", () => {
+      draftAppearance.colors[input.dataset.colorSetting] = input.value;
+      draftAppearance.theme = "custom";
+      appearanceDirty = true;
+      applyAppearancePreview();
+    });
+  });
 
-  accentColor.addEventListener("input", () => updateCustomColor(accentColor, "accent"));
-  backgroundColor.addEventListener("input", () => updateCustomColor(backgroundColor, "background"));
+  applyAppearanceButton.addEventListener("click", () => {
+    appearance = copyAppearance(draftAppearance);
+    appearanceDirty = false;
+    applyAppearancePreview();
+    appearancePreview.textContent = "Applied " + THEME_NAMES[appearance.theme];
+    saveAppearance();
+  });
+
+  resetAppearanceButton.addEventListener("click", () => {
+    appearance = copyAppearance(DEFAULT_APPEARANCE);
+    draftAppearance = copyAppearance(DEFAULT_APPEARANCE);
+    appearanceDirty = false;
+    applyAppearancePreview();
+    appearancePreview.textContent = "Reset to " + THEME_NAMES[appearance.theme];
+    saveAppearance();
+  });
 
   document.addEventListener("click", event => {
     if (!appearancePanel.hidden && !event.target.closest(".appearance-control")) {
+      if (appearanceDirty) resetAppearanceDraft();
       appearancePanel.hidden = true;
       appearanceToggle.setAttribute("aria-expanded", "false");
     }
@@ -337,7 +417,17 @@
 
   expressionInput.addEventListener("input", () => { justEvaluated = false; updatePreview(); });
   expressionInput.addEventListener("keydown", event => {
-    if (event.key === "Enter" || event.key === "=") {
+    if (justEvaluated && /^[0-9.]$/.test(event.key)) {
+      expressionInput.value = "";
+      justEvaluated = false;
+    }
+    if (event.key === "." && hasDecimalAtCaret(
+      expressionInput.value.slice(0, expressionInput.selectionStart) +
+      expressionInput.value.slice(expressionInput.selectionEnd),
+      expressionInput.selectionStart
+    )) {
+      event.preventDefault();
+    } else if (event.key === "Enter" || event.key === "=") {
       event.preventDefault();
       evaluate();
     } else if (event.key === "Escape") clear();
@@ -345,6 +435,7 @@
 
   document.addEventListener("keydown", event => {
     if (event.key === "Escape" && !appearancePanel.hidden) {
+      if (appearanceDirty) resetAppearanceDraft();
       appearancePanel.hidden = true;
       appearanceToggle.setAttribute("aria-expanded", "false");
       appearanceToggle.focus();
@@ -366,23 +457,31 @@
     const savedAppearance = localStorage.getItem("calculus-appearance");
     if (savedAppearance) {
       const parsed = JSON.parse(savedAppearance);
-      if (parsed && ["dark", "light", "custom"].includes(parsed.mode) &&
-          /^#[0-9a-f]{6}$/i.test(parsed.accent) &&
-          /^#[0-9a-f]{6}$/i.test(parsed.background)) {
-        appearance = { ...appearance, ...parsed, customized: parsed.customized === true || parsed.mode === "custom" };
+      if (parsed && THEME_NAMES[parsed.theme] &&
+          parsed.colors && Object.keys(appearanceProperties).every(key => isHexColor(parsed.colors[key]))) {
+        appearance = { theme: parsed.theme, colors: { ...parsed.colors } };
+      } else if (parsed && ["dark", "light", "custom"].includes(parsed.mode) &&
+          isHexColor(parsed.accent) && isHexColor(parsed.background)) {
+        const theme = parsed.mode === "light" ? "silver" : parsed.mode === "custom" ? "custom" : "midnight";
+        const colors = { ...THEME_PRESETS[theme === "custom" ? "midnight" : theme] };
+        colors.body = parsed.background;
+        colors.accent = parsed.accent;
+        colors.operator = parsed.accent;
+        appearance = { theme, colors };
       } else {
         console.warn("Saved appearance preference is invalid; using defaults");
       }
     } else {
       const legacyTheme = localStorage.getItem("calculus-theme");
-      if (legacyTheme === "light") appearance.mode = "light";
+      if (legacyTheme === "light") {
+        appearance = { theme: "silver", colors: { ...THEME_PRESETS.silver } };
+      }
     }
   } catch (error) {
     console.warn("Could not read appearance preference:", error);
   }
-  accentColor.value = appearance.accent;
-  backgroundColor.value = appearance.background;
-  applyAppearance();
+  draftAppearance = copyAppearance(appearance);
+  applyAppearancePreview();
   renderHistory();
   updateMemoryIndicator();
 })();

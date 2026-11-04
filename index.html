@@ -3,9 +3,9 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#10131b">
-    <meta name="description" content="A modern scientific calculator with history, memory, and keyboard support.">
-    <title>Scientific Calculator</title>
+    <meta name="theme-color" content="#34383c">
+    <meta name="description" content="MAXWELL Scientific Calculator.">
+    <title>MAXWELL Scientific Calculator</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -16,46 +16,52 @@
   </head>
   <body>
     <main class="app-shell">
-      <header class="topbar">
-        <a class="brand" href="#" aria-label="Scientific Calculator home">
-          <span class="brand-mark" aria-hidden="true">∑</span>
-          <span>calc<span class="brand-accent">ulus</span></span>
-        </a>
-        <div class="topbar-actions">
-          <span class="mode-label" id="angle-label">DEG</span>
-          <div class="appearance-control">
-            <button class="icon-button" id="appearance-toggle" type="button" aria-label="Open appearance settings" aria-expanded="false" aria-controls="appearance-panel" title="Appearance settings">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v2m0 14v2M3 12h2m14 0h2M5.64 5.64l1.42 1.42m9.88 9.88 1.42 1.42m0-12.72-1.42 1.42m-9.88 9.88-1.42 1.42"/><circle cx="12" cy="12" r="4"/></svg>
-            </button>
-            <section class="appearance-panel" id="appearance-panel" aria-label="Appearance settings" hidden>
-              <p class="appearance-title">Appearance</p>
-              <div class="theme-options" role="group" aria-label="Color theme">
-                <button class="theme-option" type="button" data-theme-mode="dark" aria-pressed="true"><span aria-hidden="true">◐</span> Dark</button>
-                <button class="theme-option" type="button" data-theme-mode="light" aria-pressed="false"><span aria-hidden="true">☼</span> Light</button>
-                <button class="theme-option" type="button" data-theme-mode="custom" aria-pressed="false"><span aria-hidden="true">✳</span> Custom</button>
-              </div>
-              <div class="custom-colors" id="custom-colors" hidden>
-                <label class="color-setting" for="accent-color">Accent color<input id="accent-color" type="color" value="#9c8cff"></label>
-                <label class="color-setting" for="background-color">Background<input id="background-color" type="color" value="#10131b"></label>
-              </div>
-            </section>
-          </div>
-        </div>
-      </header>
-
       <section class="calculator-layout" aria-label="Scientific calculator">
-        <section class="calculator-card">
-          <div class="calculator-heading">
-            <div>
-              <p class="eyebrow">PRECISION, SIMPLIFIED</p>
-              <h1>Scientific calculator</h1>
-            </div>
+        <section class="calculator-card" aria-label="MAXWELL Scientific Calculator">
+          <div class="calculator-brand">
+            <span class="brand-name">MAXWELL</span>
+            <span class="brand-tagline">SCIENTIFIC CALCULATOR</span>
+          </div>
+          <div class="calculator-tools">
+            <span class="mode-label" id="angle-label">DEG</span>
             <button class="angle-toggle" id="angle-toggle" type="button" aria-label="Change angle mode">DEG <span aria-hidden="true">⌄</span></button>
+            <div class="appearance-control">
+              <button class="icon-button" id="appearance-toggle" type="button" aria-label="Open appearance settings" aria-expanded="false" aria-controls="appearance-panel" title="Appearance settings">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v2m0 14v2M3 12h2m14 0h2M5.64 5.64l1.42 1.42m9.88 9.88 1.42 1.42m0-12.72-1.42 1.42m-9.88 9.88-1.42 1.42"/><circle cx="12" cy="12" r="4"/></svg>
+              </button>
+              <section class="appearance-panel" id="appearance-panel" aria-label="Appearance settings" hidden>
+                <p class="appearance-title">Calculator appearance</p>
+                <div class="theme-options" role="group" aria-label="Color theme presets">
+                  <button class="theme-option" type="button" data-preset="midnight"><span class="theme-swatch" aria-hidden="true"></span>Midnight Purple</button>
+                  <button class="theme-option" type="button" data-preset="ocean"><span class="theme-swatch" aria-hidden="true"></span>Ocean Blue</button>
+                  <button class="theme-option" type="button" data-preset="emerald"><span class="theme-swatch" aria-hidden="true"></span>Emerald Green</button>
+                  <button class="theme-option" type="button" data-preset="crimson"><span class="theme-swatch" aria-hidden="true"></span>Crimson Red</button>
+                  <button class="theme-option" type="button" data-preset="silver"><span class="theme-swatch" aria-hidden="true"></span>Silver and Black</button>
+                  <button class="theme-option" type="button" data-preset="black"><span class="theme-swatch" aria-hidden="true"></span>Pure Black</button>
+                  <button class="theme-option custom-theme-option" type="button" data-preset="custom"><span class="theme-swatch" aria-hidden="true"></span>Custom Theme</button>
+                </div>
+                <div class="custom-colors" id="custom-colors">
+                  <label class="color-setting" for="calculator-body-color">Calculator body<input id="calculator-body-color" data-color-setting="body" type="color" value="#111018"></label>
+                  <label class="color-setting" for="button-background-color">Button background<input id="button-background-color" data-color-setting="button" type="color" value="#1b1924"></label>
+                  <label class="color-setting" for="button-text-color">Button text<input id="button-text-color" data-color-setting="buttonText" type="color" value="#c5adfa"></label>
+                  <label class="color-setting" for="display-background-color">Display background<input id="display-background-color" data-color-setting="display" type="color" value="#10162b"></label>
+                  <label class="color-setting" for="display-text-color">Display text<input id="display-text-color" data-color-setting="displayText" type="color" value="#f0edff"></label>
+                  <label class="color-setting" for="operator-color">Operator buttons<input id="operator-color" data-color-setting="operator" type="color" value="#6442a9"></label>
+                  <label class="color-setting" for="accent-color">Accent color<input id="accent-color" data-color-setting="accent" type="color" value="#a98bfa"></label>
+                </div>
+                <p class="appearance-preview" id="appearance-preview" aria-live="polite">Previewing Midnight Purple</p>
+                <div class="appearance-actions">
+                  <button class="appearance-action reset-action" id="reset-appearance" type="button">Reset to Default</button>
+                  <button class="appearance-action apply-action" id="apply-appearance" type="button">Apply</button>
+                </div>
+              </section>
+            </div>
           </div>
 
           <section class="display" aria-label="Calculator display">
             <div class="display-meta">
-              <span id="previous-expression" aria-live="polite"></span>
+              <span id="memory-indicator" class="memory-indicator" aria-label="Memory is empty" title="Memory status"><span></span> M</span>
+              <span id="previous-expression" hidden></span>
               <button class="copy-button" id="copy-result" type="button" aria-label="Copy result" title="Copy result">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/></svg>
               </button>
@@ -64,74 +70,72 @@
             <div id="result" class="result" aria-live="polite" aria-label="Result">0</div>
           </section>
 
-          <div class="memory-row" aria-label="Memory functions">
-            <button class="memory-key" data-action="memory-clear" type="button">MC</button>
-            <button class="memory-key" data-action="memory-recall" type="button">MR</button>
-            <button class="memory-key" data-action="memory-add" type="button">M+</button>
-            <button class="memory-key" data-action="memory-subtract" type="button">M−</button>
-            <button class="memory-indicator" id="memory-indicator" type="button" aria-label="Memory is empty" title="Memory status"><span></span> MEM</button>
+          <div class="control-row" role="group" aria-label="Calculator mode keys">
+            <button class="key control-key shift-key" id="shift-toggle" type="button" aria-pressed="false"><span class="key-secondary">CLR</span><span class="key-main">SHIFT</span></button>
+            <button class="key control-key alpha-key" type="button"><span class="key-secondary">A</span><span class="key-main">ALPHA</span></button>
+            <button class="key control-key cursor-key" type="button" aria-label="Directional pad"><span class="key-main">▲<br>◀　▶<br>▼</span></button>
+            <button class="key control-key" type="button"><span class="key-secondary">SETUP</span><span class="key-main">MODE</span></button>
+            <button class="key control-key on-key" type="button"><span class="key-secondary">AC</span><span class="key-main">ON</span></button>
           </div>
 
-          <div class="scientific-keys" aria-label="Scientific functions">
-            <button class="key function-key" data-insert="sin(" type="button">sin</button>
-            <button class="key function-key" data-insert="cos(" type="button">cos</button>
-            <button class="key function-key" data-insert="tan(" type="button">tan</button>
-            <button class="key function-key" data-insert="asin(" type="button">sin<sup>−1</sup></button>
-            <button class="key function-key" data-insert="acos(" type="button">cos<sup>−1</sup></button>
-            <button class="key function-key" data-insert="atan(" type="button">tan<sup>−1</sup></button>
+          <div class="keypad" role="group" aria-label="Calculator keys">
+            <div class="scientific-keypad">
+              <button class="key function-key" data-action="reciprocal" data-shift-insert="!" aria-label="Reciprocal"><span class="key-secondary" data-default="x" data-shift="x!">x</span><span class="key-main">x⁻¹</span></button>
+              <button class="key function-key" aria-label="n choose r"><span class="key-secondary" data-default="nPr">nPr</span><span class="key-main">nCr</span></button>
+              <button class="key function-key"><span class="key-secondary" data-default="Rec">Rec</span><span class="key-main">Pol(</span></button>
+              <button class="key function-key" data-action="cube"><span class="key-secondary" data-default="∛">∛</span><span class="key-main">x³</span></button>
+              <button class="key function-key"><span class="key-secondary" data-default="d/c">d/c</span><span class="key-main">a b/c</span></button>
 
-            <button class="key function-key" data-insert="sinh(" type="button">sinh</button>
-            <button class="key function-key" data-insert="cosh(" type="button">cosh</button>
-            <button class="key function-key" data-insert="tanh(" type="button">tanh</button>
-            <button class="key function-key" data-insert="log(" type="button">log</button>
-            <button class="key function-key" data-insert="ln(" type="button">ln</button>
-            <button class="key function-key" data-insert="sqrt(" type="button">√</button>
+              <button class="key function-key" data-insert="sqrt(" data-shift-insert="cbrt("><span class="key-secondary" data-default="x²" data-shift="∛">x²</span><span class="key-main">√</span></button>
+              <button class="key function-key" data-action="square" data-shift-action="cube"><span class="key-secondary" data-default="√" data-shift="x³">√</span><span class="key-main">x²</span></button>
+              <button class="key function-key" data-insert="^"><span class="key-secondary" data-default="x²">x²</span><span class="key-main">^</span></button>
+              <button class="key function-key" data-insert="log(" data-shift-insert="10^("><span class="key-secondary" data-default="log" data-shift="10ˣ">log</span><span class="key-main">log</span></button>
+              <button class="key function-key" data-insert="ln(" data-shift-insert="e^("><span class="key-secondary" data-default="ln" data-shift="eˣ">ln</span><span class="key-main">ln</span></button>
 
-            <button class="key function-key" data-insert="cbrt(" type="button">∛</button>
-            <button class="key function-key" data-insert="abs(" type="button">|x|</button>
-            <button class="key function-key" data-insert="^" type="button">x<sup>y</sup></button>
-            <button class="key function-key" data-insert="!" type="button">x!</button>
-            <button class="key function-key" data-insert="%" type="button">%</button>
-            <button class="key function-key" data-insert="(" type="button">(</button>
+              <button class="key function-key" data-action="negate"><span class="key-secondary" data-default="DRG">DRG</span><span class="key-main">(−)</span></button>
+              <button class="key function-key"><span class="key-secondary" data-default="x y">x y</span><span class="key-main">° ' "</span></button>
+              <button class="key function-key"><span class="key-secondary" data-default="HYP">HYP</span><span class="key-main">hyp</span></button>
+              <button class="key function-key" data-insert="sin(" data-shift-insert="asin("><span class="key-secondary" data-default="sin" data-shift="sin⁻¹">sin</span><span class="key-main">sin</span></button>
+              <button class="key function-key" data-insert="cos(" data-shift-insert="acos("><span class="key-secondary" data-default="cos" data-shift="cos⁻¹">cos</span><span class="key-main">cos</span></button>
 
-            <button class="key function-key" data-insert=")" type="button">)</button>
-            <button class="key function-key" data-insert="pi" type="button">π</button>
-            <button class="key function-key" data-insert="e" type="button">e</button>
-            <button class="key function-key" data-insert="Ans" type="button">Ans</button>
-            <button class="key operator-key" data-insert="E" type="button" title="Scientific notation exponent">EXP</button>
-          </div>
+              <button class="key function-key" data-insert="tan(" data-shift-insert="atan("><span class="key-secondary" data-default="tan" data-shift="tan⁻¹">tan</span><span class="key-main">tan</span></button>
+              <button class="key function-key" data-action="memory-recall"><span class="key-secondary" data-default="STO">STO</span><span class="key-main">RCL</span></button>
+              <button class="key function-key"><span class="key-secondary" data-default="←">←</span><span class="key-main">ENG</span></button>
+              <button class="key function-key" data-insert="("><span class="key-secondary" data-default="a">a</span><span class="key-main">(</span></button>
+              <button class="key function-key" data-insert=")"><span class="key-secondary" data-default="b">b</span><span class="key-main">)</span></button>
 
-          <div class="keypad" aria-label="Calculator keys">
-            <div class="number-pad" aria-label="Number keys">
-              <button class="key number-key" data-insert="7" type="button">7</button>
-              <button class="key number-key" data-insert="8" type="button">8</button>
-              <button class="key number-key" data-insert="9" type="button">9</button>
-              <button class="key number-key" data-insert="4" type="button">4</button>
-              <button class="key number-key" data-insert="5" type="button">5</button>
-              <button class="key number-key" data-insert="6" type="button">6</button>
-              <button class="key number-key" data-insert="1" type="button">1</button>
-              <button class="key number-key" data-insert="2" type="button">2</button>
-              <button class="key number-key" data-insert="3" type="button">3</button>
-              <button class="key number-key" data-insert="0" type="button">0</button>
-              <button class="key number-key" data-insert="." type="button">.</button>
-              <button class="key number-key" data-insert="00" type="button">00</button>
+              <button class="key function-key"><span class="key-secondary" data-default=";">;</span><span class="key-main">,</span></button>
+              <button class="key function-key memory-add-key" data-action="memory-add"><span class="key-secondary" data-default="M−">M−</span><span class="key-main">M+</span></button>
             </div>
 
-            <div class="function-pad" aria-label="Calculator functions">
-              <div class="utility-row">
-                <button class="key utility-key" data-action="clear" type="button" aria-label="Clear">C</button>
-                <button class="key utility-key" data-action="delete" type="button" aria-label="Delete last character" title="Delete">⌫</button>
-              </div>
-              <div class="operator-column" aria-label="Operators">
-                <button class="key operator-key" data-insert="/" type="button" aria-label="Divide">÷</button>
-                <button class="key operator-key" data-insert="*" type="button" aria-label="Multiply">×</button>
-                <button class="key operator-key" data-insert="-" type="button" aria-label="Subtract">−</button>
-                <button class="key operator-key" data-insert="+" type="button" aria-label="Add">+</button>
-              </div>
-              <button class="key equals-key" data-action="equals" type="button" aria-label="Calculate">=</button>
+            <div class="number-keypad">
+              <button class="key number-key" data-insert="7"><span class="key-secondary" data-default="M">M</span><span class="key-main">7</span></button>
+              <button class="key number-key" data-insert="8"><span class="key-secondary" data-default="M">M</span><span class="key-main">8</span></button>
+              <button class="key number-key" data-insert="9"><span class="key-secondary" data-default="M">M</span><span class="key-main">9</span></button>
+              <button class="key function-key delete-key" data-action="delete"><span class="key-secondary" data-default="INS">INS</span><span class="key-main">DEL</span></button>
+              <button class="key function-key clear-key" data-action="clear"><span class="key-secondary" data-default="OFF">OFF</span><span class="key-main">AC</span></button>
+
+              <button class="key number-key" data-insert="4"><span class="key-secondary" data-default="M">M</span><span class="key-main">4</span></button>
+              <button class="key number-key" data-insert="5"><span class="key-secondary" data-default="M">M</span><span class="key-main">5</span></button>
+              <button class="key number-key" data-insert="6"><span class="key-secondary" data-default="M">M</span><span class="key-main">6</span></button>
+              <button class="key function-key operator-key" data-insert="*"><span class="key-secondary" data-default="nPr">nPr</span><span class="key-main">×</span></button>
+              <button class="key function-key operator-key" data-insert="/"><span class="key-secondary" data-default="nCr">nCr</span><span class="key-main">÷</span></button>
+
+              <button class="key number-key" data-insert="1"><span class="key-secondary" data-default="M">M</span><span class="key-main">1</span></button>
+              <button class="key number-key" data-insert="2"><span class="key-secondary" data-default="M">M</span><span class="key-main">2</span></button>
+              <button class="key number-key" data-insert="3"><span class="key-secondary" data-default="M">M</span><span class="key-main">3</span></button>
+              <button class="key function-key operator-key" data-insert="+" data-shift-insert="%"><span class="key-secondary" data-default="%">%</span><span class="key-main">+</span></button>
+              <button class="key function-key operator-key" data-insert="-" data-shift-insert="%"><span class="key-secondary" data-default="%">%</span><span class="key-main">−</span></button>
+
+              <button class="key number-key" data-insert="0"><span class="key-secondary" data-default="M">M</span><span class="key-main">0</span></button>
+              <button class="key number-key" data-insert="."><span class="key-secondary" data-default=":">:</span><span class="key-main">.</span></button>
+              <button class="key function-key" data-insert="10^("><span class="key-secondary" data-default="π">π</span><span class="key-main">×10ˣ</span></button>
+              <button class="key function-key" data-insert="Ans"><span class="key-secondary" data-default="Ran#">Ran#</span><span class="key-main">Ans</span></button>
+              <button class="key function-key equals-key" data-action="equals"><span class="key-secondary" data-default="%">%</span><span class="key-main">=</span></button>
             </div>
           </div>
-          <p class="keyboard-hint">Tip: use your keyboard <kbd>Enter</kbd> to calculate <span>·</span> <kbd>Esc</kbd> to clear</p>
+
+          <p class="keyboard-hint">Keyboard: Enter = &nbsp; Backspace = DEL &nbsp; Esc = AC</p>
         </section>
 
         <aside class="history-card" aria-label="Calculation history">

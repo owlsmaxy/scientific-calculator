@@ -1,6 +1,6 @@
-# Scientific Calculator
+# MAXWELL Scientific Calculator
 
-A responsive scientific calculator built with HTML, CSS, and vanilla JavaScript. It uses a safe recursive-descent expression parser rather than `eval()`.
+A compact MAXWELL scientific calculator built with HTML, CSS, and vanilla JavaScript. It uses a safe recursive-descent expression parser rather than `eval()`.
 
 ## Run in VS Code
 
@@ -13,11 +13,12 @@ No build step or package installation is required. If opening the file directly,
 ## Features
 
 - Arithmetic, parentheses, implicit multiplication, percentages, powers, factorials, constants, and scientific notation.
+- A compact scientific calculator with a five-column keypad and shift functions.
 - Trigonometric, inverse trigonometric, hyperbolic, logarithmic, root, exponential, and absolute-value functions.
-- Degree/radian switching, memory functions, calculation history, result copying, and dark/light/custom appearance options.
-- Custom appearance settings for the accent and background colors, saved in the browser.
-- Keyboard entry, live preview, clear/delete controls, and clear error messages.
+- Degree/radian switching, memory functions, calculation history, and result copying.
+- Midnight Purple, Ocean Blue, Emerald Green, Crimson Red, Silver and Black, Pure Black, and fully customizable color themes with live preview and local persistence.
+- Keyboard entry, live preview, clear/delete controls, single-decimal input, and division-by-zero error handling.
 
 ## Notes
 
-Functions are entered with parentheses, for example `sin(30)` or `sqrt(81)`. The default angle mode is degrees. `EXP` inserts the exponent marker for scientific notation, so `2.5 EXP 3` means `2.5 × 10³`. History and theme preference are stored in browser local storage.
+Functions are entered with parentheses, for example `sin(30)` or `sqrt(81)`. The default angle mode is degrees. Division by zero displays `Math ERROR`. History and theme preference are stored in browser local storage.
